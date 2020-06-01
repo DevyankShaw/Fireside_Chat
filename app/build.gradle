@@ -62,8 +62,9 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:18.0.0'
     implementation 'com.google.firebase:firebase-messaging:20.2.0'
     //glide
-    implementation 'com.github.bumptech.glide:glide:4.6.1'
-    kapt 'com.github.bumptech.glide:compiler:4.6.1'
+    implementation 'com.github.bumptech.glide:glide:4.8.0'
+    kapt 'com.github.bumptech.glide:compiler:4.8.0'
+    kapt 'androidx.annotation:annotation:1.2.0-alpha01'
     //groupie
     implementation 'com.xwray:groupie:2.0.3'
     implementation 'com.xwray:groupie-kotlin-android-extensions:2.0.3'
