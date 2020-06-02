@@ -12,6 +12,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        replaceFragment(PeopleFragment())
+
         navigation.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.navigation_people -> {

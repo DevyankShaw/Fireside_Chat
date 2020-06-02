@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.devyankshaw.chatapp.R
+import com.devyankshaw.chatapp.recyclerview.item.PersonItem
 import com.devyankshaw.chatapp.util.FirestoreUtil
 import com.google.firebase.firestore.ListenerRegistration
 
@@ -17,15 +18,52 @@ import com.xwray.groupie.Section
 import com.xwray.groupie.kotlinandroidextensions.Item
 import com.xwray.groupie.kotlinandroidextensions.ViewHolder
 import kotlinx.android.synthetic.main.fragment_people.*
+import org.jetbrains.anko.support.v4.startActivity
 
 
 class PeopleFragment : Fragment() {
 
+    private lateinit var userListenerRegistration: ListenerRegistration
+
+    private var shouldInitRecyclerView = true
+
+    private lateinit var peopleSection: Section
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+
+        userListenerRegistration =
+            FirestoreUtil.addUsersListener(this.requireActivity(), this::updateRecyclerView)
 
         return inflater.inflate(R.layout.fragment_people, container, false)
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        FirestoreUtil.removeListener(userListenerRegistration)
+        shouldInitRecyclerView = true
+    }
+
+    private fun updateRecyclerView(items: List<Item>) {
+
+        fun init() {
+            recycler_view_people.apply {
+                layoutManager = LinearLayoutManager(this@PeopleFragment.context)
+                adapter = GroupAdapter<ViewHolder>().apply {
+                    peopleSection = Section(items)
+                    add(peopleSection)
+                }
+            }
+            shouldInitRecyclerView = false
+        }
+
+        fun updateItems() {}
+
+        if (shouldInitRecyclerView)
+            init()
+        else
+            updateItems()
+
+    }
 
 }
