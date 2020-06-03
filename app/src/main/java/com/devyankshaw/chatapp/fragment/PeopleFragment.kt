@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.devyankshaw.chatapp.AppConstants
+import com.devyankshaw.chatapp.ChatActivity
 import com.devyankshaw.chatapp.R
 import com.devyankshaw.chatapp.recyclerview.item.PersonItem
 import com.devyankshaw.chatapp.util.FirestoreUtil
@@ -52,18 +54,28 @@ class PeopleFragment : Fragment() {
                 adapter = GroupAdapter<ViewHolder>().apply {
                     peopleSection = Section(items)
                     add(peopleSection)
+                    setOnItemClickListener(onItemClick)
                 }
             }
             shouldInitRecyclerView = false
         }
 
-        fun updateItems() {}
+        fun updateItems() = peopleSection.update(items)
 
         if (shouldInitRecyclerView)
             init()
         else
             updateItems()
 
+    }
+
+    private val onItemClick = OnItemClickListener { item, view ->
+        if (item is PersonItem) {
+            startActivity<ChatActivity>(
+                AppConstants.USER_NAME to item.person.name,
+                AppConstants.USER_ID to item.userId
+            )
+        }
     }
 
 }
