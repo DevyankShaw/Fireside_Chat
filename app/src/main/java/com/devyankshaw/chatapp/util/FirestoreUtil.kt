@@ -2,10 +2,7 @@ package com.devyankshaw.chatapp.util
 
 import android.content.Context
 import android.util.Log
-import com.devyankshaw.chatapp.model.ChatChannel
-import com.devyankshaw.chatapp.model.MessageType
-import com.devyankshaw.chatapp.model.TextMessage
-import com.devyankshaw.chatapp.model.User
+import com.devyankshaw.chatapp.model.*
 import com.devyankshaw.chatapp.recyclerview.item.PersonItem
 import com.devyankshaw.chatapp.recyclerview.item.TextMessageItem
 import com.google.firebase.auth.FirebaseAuth
@@ -120,5 +117,11 @@ object FirestoreUtil {
                 }
                 onListen(items)
             }
+    }
+
+    fun sendMessage(message: Message, channelId: String) {
+        chatChannelsCollectionRef.document(channelId)
+            .collection("messages")
+            .add(message)
     }
 }
