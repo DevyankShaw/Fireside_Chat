@@ -2,12 +2,16 @@ package com.devyankshaw.chatapp
 
 import android.app.Activity
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import com.devyankshaw.chatapp.service.MyFirebaseInstanceIDService
 import com.devyankshaw.chatapp.util.FirestoreUtil
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.ErrorCodes
 import com.firebase.ui.auth.IdpResponse
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.android.synthetic.main.activity_sign_in.*
 import org.jetbrains.anko.clearTask
 import org.jetbrains.anko.design.longSnackbar
@@ -48,6 +52,18 @@ class SignInActivity : AppCompatActivity() {
                 val progressDialog = indeterminateProgressDialog("Setting up your account")
                 FirestoreUtil.initCurrentUserIfFirstTime {
                     startActivity(intentFor<MainActivity>().newTask().clearTask())
+
+                    FirebaseMessaging.getInstance().isAutoInitEnabled = true
+
+                    FirebaseInstanceId.getInstance().instanceId
+                        .addOnCompleteListener(OnCompleteListener { task ->
+                            if (!task.isSuccessful)
+                                return@OnCompleteListener
+
+                            val newRegistrationToken = task.result?.token
+                            MyFirebaseInstanceIDService.addTokenToFirestore(newRegistrationToken)
+                        })
+
                     progressDialog.dismiss()
                 }
             }
