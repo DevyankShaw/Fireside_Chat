@@ -3,6 +3,7 @@ package com.devyankshaw.chatapp.util
 import android.content.Context
 import android.util.Log
 import com.devyankshaw.chatapp.model.*
+import com.devyankshaw.chatapp.recyclerview.item.ImageMessageItem
 import com.devyankshaw.chatapp.recyclerview.item.PersonItem
 import com.devyankshaw.chatapp.recyclerview.item.TextMessageItem
 import com.google.firebase.auth.FirebaseAuth
@@ -113,7 +114,8 @@ object FirestoreUtil {
                     if (it["type"] == MessageType.TEXT)
                         items.add(TextMessageItem(it.toObject(TextMessage::class.java)!!, context))
                     else
-                       TODO("Add image message")
+                        items.add(ImageMessageItem(it.toObject(ImageMessage::class.java)!!, context))
+                    return@forEach
                 }
                 onListen(items)
             }
